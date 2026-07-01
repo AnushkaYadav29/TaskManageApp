@@ -1,182 +1,135 @@
-import React, {
-  useEffect,
-  useState,
-} from "react";
-
-import {
-  getUserInfo,
-} from "../api/api";
-
-import {
-  useNavigate,
-} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { getUserInfo } from "../api/api";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
-  const navigate =
-    useNavigate();
 
-  const [user, setUser] =
-    useState(null);
+  const navigate = useNavigate();
 
-  const fetchUser =
-    async () => {
-      try {
-        const data =
-          await getUserInfo();
-
-        setUser(
-          data.loggedUser
-        );
-      } catch (error) {
-        console.log(error);
-      }
-    };
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     fetchUser();
   }, []);
 
+  const fetchUser = async () => {
+    try {
+
+      const data = await getUserInfo();
+
+      setUser(data.loggedUser);
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  if (!user) {
+
+    return (
+      <div className="text-center mt-5">
+        <h4>Loading...</h4>
+      </div>
+    );
+
+  }
+
   return (
+
     <div className="container mt-4">
 
-      {/* Back Button */}
+      <div className="card shadow">
 
-      <button
-        className="btn btn-secondary mb-4"
-        onClick={() =>
-          navigate(-1)
-        }
-      >
-        ← Back
-      </button>
+        <div className="card-header bg-primary text-white">
 
-      <div className="row justify-content-center">
+          <h3>My Profile</h3>
 
-        <div className="col-md-8">
+        </div>
 
-          <div className="card shadow-lg border-0">
+        <div className="card-body text-center">
 
-            <div className="card-header bg-primary text-white text-center">
+          <img
 
-              <h2>
-                My Profile
-              </h2>
+            src={
+              user.profileImage
+                ? `http://localhost:5003/uploads/profile/${user.profileImage}`
+                : "https://via.placeholder.com/180"
+            }
 
-            </div>
+            alt="Profile"
 
-            <div className="card-body p-4">
+            className="rounded-circle border shadow"
 
-              <div className="text-center mb-4">
+            width="180"
 
-                <img
-                  src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
-                  alt="profile"
-                  width="100"
-                />
+            height="180"
 
-                <h3 className="mt-3">
-                  {user?.name}
-                </h3>
+          />
 
-                <span
-                  className={`badge ${
-                    user?.role ===
-                    "admin"
-                      ? "bg-danger"
-                      : "bg-success"
-                  }`}
-                >
-                  {user?.role}
-                </span>
+          <hr />
 
-              </div>
+          <h4>{user.name}</h4>
 
-              <hr />
+          <p>
 
-              <div className="row">
+            <strong>Email :</strong>
 
-                <div className="col-md-6 mb-3">
-                  <strong>
-                    Name
-                  </strong>
+            {user.email}
 
-                  <p>
-                    {user?.name}
-                  </p>
-                </div>
+          </p>
 
-                <div className="col-md-6 mb-3">
-                  <strong>
-                    Email
-                  </strong>
+          <p>
 
-                  <p>
-                    {user?.email}
-                  </p>
-                </div>
+            <strong>Contact :</strong>
 
-                <div className="col-md-6 mb-3">
-                  <strong>
-                    Contact Number
-                  </strong>
+            {user.contactNumber}
 
-                  <p>
-                    {
-                      user?.contactNumber
-                    }
-                  </p>
-                </div>
+          </p>
 
-                <div className="col-md-6 mb-3">
-                  <strong>
-                    Role
-                  </strong>
+          <p>
 
-                  <p>
-                    {user?.role}
-                  </p>
-                </div>
+            <strong>Role :</strong>
 
-              </div>
+            {user.role}
 
-              <hr />
+          </p>
 
-              <div className="d-flex gap-3 justify-content-center">
+          <button
 
-                <button
-                  className="btn btn-warning"
-                  onClick={() =>
-                    navigate(
-                      "/dashboard/edit-profile"
-                    )
-                  }
-                >
-                  Edit Profile
-                </button>
+            className="btn btn-warning me-2"
 
-                <button
-                  className="btn btn-danger"
-                  onClick={() =>
-                    navigate(
-                      "/dashboard/change-password"
-                    )
-                  }
-                >
-                  Change Password
-                </button>
+            onClick={() =>
+              navigate("/dashboard/edit-profile")
+            }
 
-              </div>
+          >
 
-            </div>
+            Edit Profile
 
-          </div>
+          </button>
+
+          <button
+
+            className="btn btn-primary"
+
+            onClick={() =>
+              navigate("/dashboard/change-password")
+            }
+
+          >
+
+            Change Password
+
+          </button>
 
         </div>
 
       </div>
 
     </div>
+
   );
+
 };
 
 export default Profile;

@@ -1,7 +1,16 @@
 import axiosInstance from "./axiosInstance";
 
 export const registerUser = async (userData) => {
-  const res = await axiosInstance.post("/user/register", userData);
+  const res = await axiosInstance.post(
+    "/user/register",
+    userData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+
   return res.data;
 };
 
@@ -73,16 +82,20 @@ export const getTaskById = async (id) => {
   return res.data;
 };
 
-export const updateUser =
-  async (id, userData) => {
-    const res =
-      await axiosInstance.put(
+export const updateUser = async (id, formData) => {
+
+    const res = await axiosInstance.put(
         `/user/update/${id}`,
-        userData
-      );
+        formData,
+        {
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
+        }
+    );
 
     return res.data;
-  };
+};
 
 export const getTaskByStatus = async (status) => {
     const res =
@@ -121,6 +134,26 @@ export const changePassword =
       "/user/changePassword",
       passwordData
     );
+
+  return res.data;
+};
+
+export const assignTask = async (taskID, userIDs) => {
+  const res = await axiosInstance.post(
+    "/assign-task/assign-task",
+    {
+      taskID,
+      userIDs,
+    }
+  );
+
+  return res.data;
+};
+
+export const getTaskWithUsers = async (id) => {
+  const res = await axiosInstance.get(
+    `/assign-task/getTaskWithUsers/${id}`
+  );
 
   return res.data;
 };
